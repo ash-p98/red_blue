@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "145491926351",
+    "project_id": "red-blue-475fd",
+    "storage_bucket": "red-blue-475fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145491926351:android:5424754ff3f4b28100793a",
+        "android_client_info": {
+          "package_name": "co.ashpaul.red_blue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145491926351-i76lv5mqerbr6e3r9ak97g6u5hcjd8ml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBI2fcjLTu7O6O5rUu_d9-hKjesDbdl_qQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145491926351-i76lv5mqerbr6e3r9ak97g6u5hcjd8ml.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "145491926351-tcl04ohdm950r43759p5a6jpma9fo1rr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.ashpaul.redBlue"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
