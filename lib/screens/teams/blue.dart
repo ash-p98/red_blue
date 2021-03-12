@@ -30,7 +30,7 @@ class _BlueState extends State<Blue> {
       body: Column(
         children: <Widget>[
           Text('total worldwide score'),
-          Text('your total score'),
+          Text(''),
           Text('blue button tapped'),
           Row(
             children: <Widget>[

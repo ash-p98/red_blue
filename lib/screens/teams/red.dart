@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_blue/services/database.dart';
 
 class Red extends StatefulWidget {
   @override
@@ -29,7 +30,9 @@ class _RedState extends State<Red> {
           Row(
             children: <Widget>[
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  DatabaseService().decreaseUserData();
+                },
                 child: Text('red'),
               ),
             ],
