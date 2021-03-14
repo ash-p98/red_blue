@@ -49,6 +49,7 @@ class AuthService {
 
       // create a new JSON tree for the user with the uid
       await DatabaseService(uid: user.uid).createUserData();
+      await DatabaseService().createWins();
       return _userFromFirebaseUser(user);
     }catch(e){
       print(e.toString());

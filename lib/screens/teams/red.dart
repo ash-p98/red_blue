@@ -7,6 +7,22 @@ class Red extends StatefulWidget {
 }
 
 class _RedState extends State<Red> {
+  int _myScore = 0;
+  int _totalScore = 0;
+  int _red = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    DatabaseService().getScore((myScore, totalScore, blue, red, userTotal) {
+      setState(() {
+        _myScore = myScore;
+        _totalScore = totalScore;
+        _red = red;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,16 +33,16 @@ class _RedState extends State<Red> {
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
-              onPressed: () async {
-              },
+              onPressed: () async {},
               icon: Icon(Icons.person),
               label: Text('logout'))
         ],
       ),
       body: Column(
         children: <Widget>[
-          Text('total worldwide score'),
-          Text('your total score'),
+          Text('total worldwide score = $_totalScore'),
+          Text('pressed red: $_red'),
+          Text('your contribution = $_myScore'),
           Row(
             children: <Widget>[
               ElevatedButton(
