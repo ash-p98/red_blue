@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:red_blue/services/database.dart';
 
@@ -10,17 +13,27 @@ class _RedState extends State<Red> {
   int _myScore = 0;
   int _totalScore = 0;
   int _red = 0;
+  StreamSubscription<Event> scoreListener;
 
   @override
   void initState() {
     super.initState();
-    DatabaseService().getScore((myScore, totalScore, blue, red, userTotal) {
-      setState(() {
-        _myScore = myScore;
-        _totalScore = totalScore;
-        _red = red;
-      });
-    });
+    scoreListener =
+        DatabaseService().getScore((myScore, totalScore, blue, red, userTotal) {
+          if (mounted)
+            setState(() {
+              _myScore = myScore;
+              _totalScore = totalScore;
+              _red = red;
+            });
+        });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scoreListener?.cancel();
+    print("red stopped");
   }
 
   @override

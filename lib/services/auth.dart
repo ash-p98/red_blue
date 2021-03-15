@@ -12,9 +12,7 @@ class AuthService {
 
   //auth change user stream
   Stream<userInfo> get user {
-    return _auth
-        .authStateChanges()
-        .map(_userFromFirebaseUser);
+    return _auth.authStateChanges().map(_userFromFirebaseUser);
   }
 
   //sign in anon
@@ -31,11 +29,12 @@ class AuthService {
 
   //sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
-    try{
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User user = result.user;
       return _userFromFirebaseUser(user);
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
@@ -43,28 +42,28 @@ class AuthService {
 
   //register with email and password
   Future registerWithEmailAndPassword(String email, String password) async {
-    try{
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       User user = result.user;
 
       // create a new JSON tree for the user with the uid
       await DatabaseService(uid: user.uid).createUserData();
-      await DatabaseService().createWins();
+      // await DatabaseService().createWins();
       return _userFromFirebaseUser(user);
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
   //sign out
-Future signOut() async {
-    try{
+  Future signOut() async {
+    try {
       return await _auth.signOut();
-    } catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
-}
-
+  }
 }

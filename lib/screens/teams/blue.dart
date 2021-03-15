@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:red_blue/services/database.dart';
 
@@ -12,23 +15,34 @@ class _BlueState extends State<Blue> {
   int _blue = 0;
   int _redWins = 0;
   int _blueWins = 0;
+  StreamSubscription<Event> scoreListener;
 
   @override
   void initState() {
     super.initState();
-    DatabaseService().getScore((myScore, totalScore, blue, red, userTotal) {
-      setState(() {
-        _myScore = myScore;
-        _totalScore = totalScore;
-        _blue = blue;
-      });
-    });
+    scoreListener =
+        DatabaseService().getScore((myScore, totalScore, blue, red, userTotal) {
+          if (mounted)
+            setState(() {
+              _myScore = myScore;
+              _totalScore = totalScore;
+              _blue = blue;
+            });
+        });
     DatabaseService().getWins((redWin, blueWin) {
-      setState(() {
-        _redWins = redWin;
-        _blueWins = blueWin;
-      });
+      if (mounted)
+        setState(() {
+          _redWins = redWin;
+          _blueWins = blueWin;
+        });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scoreListener?.cancel();
+    print("blue stopped");
   }
 
   @override
@@ -56,9 +70,6 @@ class _BlueState extends State<Blue> {
               ElevatedButton(
                 onPressed: () {
                   DatabaseService().updateUserData();
-                  if (_totalScore == 20){
-                    DatabaseService().increaseBlueWins();
-                  }
                 },
                 child: Text('blue'),
               ),

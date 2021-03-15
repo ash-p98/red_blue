@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:red_blue/services/auth.dart';
 import 'package:red_blue/shared/constants.dart';
 import 'package:red_blue/shared/loading.dart';
