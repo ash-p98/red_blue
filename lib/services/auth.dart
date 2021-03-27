@@ -20,6 +20,7 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInAnonymously();
       User user = result.user;
+      await DatabaseService(uid: user.uid).createUserData();
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

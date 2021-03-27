@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class DatabaseService {
   String uid;
-  final WINNING_POINT_LIMIT = 20;
+  final WINNING_POINT_LIMIT = 1000000;
 
   DatabaseService({this.uid}) {
     uid = FirebaseAuth.instance.currentUser.uid;
@@ -78,7 +78,7 @@ class DatabaseService {
 
   //show the score on front end
   StreamSubscription<Event> getScore(
-      Function(int myScore, int totalScore, int blue, int red, int userTotal)
+      Function(int myScore, int totalScore, int blue, int red, int userTotal, int globalBlue, int globalRed)
       data) {
     var subscription = databaseReference.onValue.listen((event) async {
       Map<dynamic, dynamic> users = event.snapshot.value;
@@ -89,8 +89,12 @@ class DatabaseService {
       int blue = 0;
       int red = 0;
       int userTotal = 0;
+      int globalBlue = 0;
+      int globalRed = 0;
       users.forEach((key, value) {
         totalScore += value["value"];
+        globalBlue += value["blue"];
+        globalRed += value["red"];
         if (key == uid) {
           userScore = value["value"];
           blue = value["blue"];
@@ -118,13 +122,13 @@ class DatabaseService {
           'redWins': redWin,
         });
       }
-      data.call(userScore, totalScore, blue, red, userTotal);
+      data.call(userScore, totalScore, blue, red, userTotal, globalBlue, globalRed);
     });
     return subscription;
   }
 
   StreamSubscription<Event> getHomeScore(
-      Function(int myScore, int totalScore, int blue, int red, int userTotal)
+      Function(int myScore, int totalScore, int blue, int red, int userTotal, int globalBlue, int globalRed)
       data) {
     var subscription = databaseReference.onValue.listen((event) async {
       Map<dynamic, dynamic> users = event.snapshot.value;
@@ -134,8 +138,12 @@ class DatabaseService {
       int blue = 0;
       int red = 0;
       int userTotal = 0;
+      int globalBlue = 0;
+      int globalRed = 0;
       users.forEach((key, value) {
         totalScore += value["value"];
+        globalBlue += value["blue"];
+        globalRed += value["red"];
         if (key == uid) {
           userScore = value["value"];
           blue = value["blue"];
@@ -146,7 +154,7 @@ class DatabaseService {
         updatedUsers.putIfAbsent(key, () => value);
       });
 
-      data.call(userScore, totalScore, blue, red, userTotal);
+      data.call(userScore, totalScore, blue, red, userTotal, globalBlue, globalRed);
     });
 
     return subscription;

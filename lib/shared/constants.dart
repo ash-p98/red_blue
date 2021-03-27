@@ -5,8 +5,14 @@ const textInputDecoration = InputDecoration(
   filled: true,
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white, width: 2.0),
+    borderRadius: const BorderRadius.all(
+      const Radius.circular(100.0),
+    ),
   ),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.deepPurpleAccent, width: 2.0),
+    borderRadius: const BorderRadius.all(
+      const Radius.circular(100.0),
+    ),
   ),
 );
