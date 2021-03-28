@@ -28,7 +28,7 @@ class _SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     scoreListener =
-        DatabaseService().getScore((myScore, totalScore, blue, red, userTotal, globalBlue, globalRed) {
+        DatabaseService().getScore((myScore, totalScore, blue, red, userTotal, globalBlue, globalRed, totalBlueTeamMembers,totalRedTeamMembers) {
       if (mounted)
         setState(() {
           _myScore = myScore;

@@ -23,6 +23,8 @@ class _BlueState extends State<Blue> {
   int _totalUsers = 0;
   int _globalBlue = 0;
   int _globalRed = 0;
+  int _totalBlueTeamMembers = 0;
+  int _totalRedTeamMembers = 0;
   BannerAd _ad;
   bool isLoaded;
 
@@ -48,7 +50,8 @@ class _BlueState extends State<Blue> {
     );
     _ad.load();
     scoreListener = DatabaseService().getScore(
-        (myScore, totalScore, blue, red, userTotal, globalBlue, globalRed) {
+        (myScore, totalScore, blue, red, userTotal, globalBlue, globalRed, totalBlueTeamMembers,
+            totalRedTeamMembers) {
       if (mounted)
         setState(() {
           _myScore = myScore;
@@ -57,6 +60,8 @@ class _BlueState extends State<Blue> {
           _red = red;
           _globalBlue = globalBlue;
           _globalRed = globalRed;
+          _totalBlueTeamMembers = totalBlueTeamMembers;
+          _totalRedTeamMembers = totalRedTeamMembers;
         });
     });
     DatabaseService().getOnlineUsers((totalOnlineUser) {
@@ -144,6 +149,64 @@ class _BlueState extends State<Blue> {
                             text: ' $_totalUsers',
                             style: TextStyle(
                                 color: Colors.lightGreenAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Users (Blue Team)',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                          WidgetSpan(
+                            child: Icon(Icons.person,
+                                size: 16, color: Colors.blue),
+                          ),
+                          TextSpan(
+                            text: ' $_totalBlueTeamMembers',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Users (Red Team) ',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                          WidgetSpan(
+                            child:
+                            Icon(Icons.person, size: 16, color: Colors.red),
+                          ),
+                          TextSpan(
+                            text: ' $_totalRedTeamMembers',
+                            style: TextStyle(
+                                color: Colors.red,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
                                 fontStyle: FontStyle.italic),

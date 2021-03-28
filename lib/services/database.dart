@@ -78,7 +78,15 @@ class DatabaseService {
 
   //show the score on front end
   StreamSubscription<Event> getScore(
-      Function(int myScore, int totalScore, int blue, int red, int userTotal, int globalBlue, int globalRed)
+      Function(int myScore,
+          int totalScore,
+          int blue,
+          int red,
+          int userTotal,
+          int globalBlue,
+          int globalRed,
+          int totalBlueTeamMembers,
+          int totalRedTeamMembers)
       data) {
     var subscription = databaseReference.onValue.listen((event) async {
       Map<dynamic, dynamic> users = event.snapshot.value;
@@ -91,7 +99,12 @@ class DatabaseService {
       int userTotal = 0;
       int globalBlue = 0;
       int globalRed = 0;
+      int totalBlueTeamMembers = 0;
+      int totalRedTeamMembers = 0;
       users.forEach((key, value) {
+        if (value["value"] > 0)
+          totalBlueTeamMembers++;
+        else if (value['value'] < 0) totalRedTeamMembers++;
         totalScore += value["value"];
         globalBlue += value["blue"];
         globalRed += value["red"];
@@ -122,13 +135,24 @@ class DatabaseService {
           'redWins': redWin,
         });
       }
-      data.call(userScore, totalScore, blue, red, userTotal, globalBlue, globalRed);
+      data.call(
+          userScore, totalScore, blue, red, userTotal, globalBlue, globalRed, totalBlueTeamMembers,
+          totalRedTeamMembers);
     });
     return subscription;
   }
 
   StreamSubscription<Event> getHomeScore(
-      Function(int myScore, int totalScore, int blue, int red, int userTotal, int globalBlue, int globalRed)
+      Function(
+          int myScore,
+          int totalScore,
+          int blue,
+          int red,
+          int userTotal,
+          int globalBlue,
+          int globalRed,
+          int totalBlueTeamMembers,
+          int totalRedTeamMembers)
       data) {
     var subscription = databaseReference.onValue.listen((event) async {
       Map<dynamic, dynamic> users = event.snapshot.value;
@@ -140,8 +164,13 @@ class DatabaseService {
       int userTotal = 0;
       int globalBlue = 0;
       int globalRed = 0;
+      int totalBlueTeamMembers = 0;
+      int totalRedTeamMembers = 0;
       users.forEach((key, value) {
         totalScore += value["value"];
+        if (value["value"] > 0)
+          totalBlueTeamMembers++;
+        else if (value['value'] < 0) totalRedTeamMembers++;
         globalBlue += value["blue"];
         globalRed += value["red"];
         if (key == uid) {
@@ -154,7 +183,8 @@ class DatabaseService {
         updatedUsers.putIfAbsent(key, () => value);
       });
 
-      data.call(userScore, totalScore, blue, red, userTotal, globalBlue, globalRed);
+      data.call(userScore, totalScore, blue, red, userTotal, globalBlue,
+          globalRed, totalBlueTeamMembers, totalRedTeamMembers);
     });
 
     return subscription;

@@ -30,6 +30,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   int _globalRed = 0;
   BannerAd _ad;
   bool isLoaded;
+  int _totalBlueTeamMembers = 0;
+  int _totalRedTeamMembers = 0;
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       listener: AdListener(
         onAdLoaded: (_) {
           setState(
-            () {
+                () {
               isLoaded = true;
             },
           );
@@ -54,32 +56,35 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     _ad.load();
     WidgetsBinding.instance.addObserver(this);
     scoreListener = DatabaseService().getHomeScore(
-      (myScore, totalScore, blue, red, userTotal, globalBlue, globalRed) {
+          (myScore, totalScore, blue, red, userTotal, globalBlue, globalRed,
+          int totalBlueTeamMembers, int totalRedTeamMembers) {
         if (mounted)
           setState(
-            () {
+                () {
               _myScore = myScore;
               _totalScore = totalScore;
               _globalBlue = globalBlue;
               _globalRed = globalRed;
+              _totalBlueTeamMembers = totalBlueTeamMembers;
+              _totalRedTeamMembers = totalRedTeamMembers;
             },
           );
       },
     );
     DatabaseService().getOnlineUsers(
-      (totalOnlineUser) {
+          (totalOnlineUser) {
         setState(
-          () {
+              () {
             _totalUsers = totalOnlineUser;
           },
         );
       },
     );
     DatabaseService().getWins(
-      (redWin, blueWin) {
+          (redWin, blueWin) {
         if (mounted)
           setState(
-            () {
+                () {
               _redWins = redWin;
               _blueWins = blueWin;
             },
@@ -168,7 +173,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+              const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,15 +207,64 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  // Text(
-                  //   'WORLDWIDE TUG OF WAR!',
-                  //   style: TextStyle(
-                  //       color: Colors.white,
-                  //       // fontWeight: FontWeight.bold,
-                  //       fontSize: 24,
-                  //       fontStyle: FontStyle.italic,
-                  //       fontWeight: FontWeight.bold),
-                  // ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Users (Blue Team)',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                          WidgetSpan(
+                            child: Icon(Icons.person,
+                                size: 16, color: Colors.blue),
+                          ),
+                          TextSpan(
+                            text: ' $_totalBlueTeamMembers',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Users (Red Team) ',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                          WidgetSpan(
+                            child:
+                            Icon(Icons.person, size: 16, color: Colors.red),
+                          ),
+                          TextSpan(
+                            text: ' $_totalRedTeamMembers',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Row(
                     children: <Widget>[
                       Expanded(
@@ -239,44 +293,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       ),
                     ],
                   ),
-                  // Divider(thickness: 2, color: Colors.deepPurpleAccent),
-                  // Text(
-                  //   'Team Wins:',
-                  //   style: TextStyle(
-                  //       color: Colors.white,
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 16,
-                  //       fontStyle: FontStyle.italic),
-                  // ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: <Widget>[
-                  //     Text(
-                  //       '$_blueWins',
-                  //       style: TextStyle(
-                  //           color: Colors.lightBlueAccent,
-                  //           fontWeight: FontWeight.bold,
-                  //           fontSize: 30,
-                  //           fontStyle: FontStyle.italic),
-                  //     ),
-                  //     Text(
-                  //       '-',
-                  //       style: TextStyle(
-                  //           color: Colors.white,
-                  //           fontWeight: FontWeight.bold,
-                  //           fontSize: 30,
-                  //           fontStyle: FontStyle.italic),
-                  //     ),
-                  //     Text(
-                  //       '$_redWins',
-                  //       style: TextStyle(
-                  //           color: Colors.redAccent,
-                  //           fontWeight: FontWeight.bold,
-                  //           fontSize: 30,
-                  //           fontStyle: FontStyle.italic),
-                  //     ),
-                  //   ],
-                  // ),
                   Divider(thickness: 2, color: Colors.deepPurpleAccent),
                   Text(
                     'Worldwide Score:',
@@ -297,18 +313,22 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                           fontStyle: FontStyle.italic),
                     )
                         : _totalScore > 0
-                        ? Text('Blue Team is in the lead!',
+                        ? Text(
+                      'Blue Team is in the lead!',
                       style: TextStyle(
                           color: Colors.lightBlueAccent[400],
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          fontStyle: FontStyle.italic),)
-                        : Text('Red Team is in the lead!',
+                          fontStyle: FontStyle.italic),
+                    )
+                        : Text(
+                      'Red Team is in the lead!',
                       style: TextStyle(
                           color: Color(0xffff3421),
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          fontStyle: FontStyle.italic),)),
+                          fontStyle: FontStyle.italic),
+                    )),
                   ),
                   Align(
                     child: Text(
@@ -317,8 +337,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                           color: (_totalScore == 0
                               ? Colors.white
                               : _totalScore > 0
-                                  ? Colors.lightBlueAccent[400]
-                                  : Color(0xffff3421)),
+                              ? Colors.lightBlueAccent[400]
+                              : Color(0xffff3421)),
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
                           fontStyle: FontStyle.italic),
@@ -374,26 +394,30 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   Align(
                     child: (_myScore == 0
                         ? Text(
-                            "Just choose a team...",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                fontStyle: FontStyle.italic),
-                          )
+                      "Just choose a team...",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          fontStyle: FontStyle.italic),
+                    )
                         : _myScore > 0
-                            ? Text("You're Blue Team!",
+                        ? Text(
+                      "You're Blue Team!",
                       style: TextStyle(
                           color: Colors.lightBlueAccent[400],
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          fontStyle: FontStyle.italic),)
-                            : Text("You're Red Team!",
+                          fontStyle: FontStyle.italic),
+                    )
+                        : Text(
+                      "You're Red Team!",
                       style: TextStyle(
                           color: Color(0xffff3421),
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          fontStyle: FontStyle.italic),)),
+                          fontStyle: FontStyle.italic),
+                    )),
                   ),
                   Align(
                     child: Text(
@@ -402,8 +426,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                           color: (_myScore == 0
                               ? Colors.white
                               : _myScore > 0
-                                  ? Colors.lightBlueAccent[400]
-                                  : Color(0xffff3421)),
+                              ? Colors.lightBlueAccent[400]
+                              : Color(0xffff3421)),
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
                           fontStyle: FontStyle.italic),
@@ -495,10 +519,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             alignment: Alignment.bottomCenter,
             child: AnimatedWave(height: 20, speed: 1),
           ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: AnimatedWave(height: 20, speed: 1.8, offset: pi),
-          // ),
           Align(
             alignment: Alignment.bottomCenter,
             child: AnimatedWave(height: 20, speed: 1.4, offset: pi / 2),

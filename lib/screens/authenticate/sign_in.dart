@@ -169,15 +169,15 @@ class _SignInState extends State<SignIn> {
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: AnimatedWave(height: 280, speed: 1),
+                  child: AnimatedWave(height: 180, speed: 1),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: AnimatedWave(height: 220, speed: 0.8, offset: pi),
+                  child: AnimatedWave(height: 120, speed: 0.8, offset: pi),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: AnimatedWave(height: 320, speed: 1.4, offset: pi / 2),
+                  child: AnimatedWave(height: 220, speed: 1.4, offset: pi / 2),
                 ),
               ],
             ),
